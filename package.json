@@ -1,0 +1,29 @@
+{
+  "name": "SearchList-examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "umi dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/insight-respo/SearchList-examples.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/insight-respo/SearchList-examples/issues"
+  },
+  "homepage": "https://github.com/insight-respo/SearchList-examples#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "antd": "^3.19.3",
+    "moment": "^2.24.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "umi": "^2.7.3"
+  }
+}

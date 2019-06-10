@@ -1,0 +1,1 @@
+export const TABLE_DEFAULT_PAGE_SIZE: 15 = 15;
