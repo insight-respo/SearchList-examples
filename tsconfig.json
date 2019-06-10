@@ -8,6 +8,9 @@
     "jsx": "react",
     "rootDir": "./pages",
     "allowJs": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   }
 }

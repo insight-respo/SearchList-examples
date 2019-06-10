@@ -18,9 +18,12 @@
     "url": "https://github.com/insight-respo/SearchList-examples/issues"
   },
   "homepage": "https://github.com/insight-respo/SearchList-examples#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "umi-plugin-dva": "^1.6.0"
+  },
   "dependencies": {
     "antd": "^3.19.3",
+    "dva": "^2.4.1",
     "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

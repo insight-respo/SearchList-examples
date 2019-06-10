@@ -5,5 +5,13 @@ export default {
       path: '/example1',
       component: './example1'
     }
-  ]
+  ],
+  plugins: [
+    ['umi-plugin-dva', {
+      immer: true,
+    }]
+  ],
+  cssLoaderOptions: {
+    module: true,
+  }
 }

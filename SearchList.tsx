@@ -4,13 +4,13 @@
  */
 
 // tslint:disable: member-ordering
-import { TABLE_DEFAULT_PAGE_SIZE } from './constants';
+import { TABLE_DEFAULT_PAGE_SIZE } from '@/constants';
 import { FormComponentProps } from 'antd/lib/form';
 import { PaginationProps } from 'antd/lib/pagination';
 import { SorterResult } from 'antd/lib/table';
 import { Location } from 'history';
 import { isMoment } from 'moment';
-import React, { Component } from 'react';
+import * as React from 'react';
 import Router from 'umi/router';
 
 /**
@@ -22,17 +22,17 @@ export interface ISearchListOptions<T> {
    * * 是否关联成分词, 是否关联靶点... antd 的 table 在单选的场景下依旧是数组, 目前 insight 接口规范中需要是
    * 一个值, 而不是数组, 详情见规范 https://jiang-xuan.github.io/jfrontlife/前后端交互规范#请求规范
    */
-  singleFields: Array<keyof T>;
+  singleFields?: Array<keyof T>;
   /**
    * @description 在 是否关联成分词, 是否关联靶点 等的场景下, 一般不会直接已字段名进行请求, 而是会加上一个 `isAssoc` 的前缀
    * 该配置可以用来配置该前缀
    */
-  singleFieldPrefix: string;
+  singleFieldPrefix?: string;
   /**
    * @description 在筛选中中有时会存在 时间段 这样的筛选项, 目前 insight 接口规范中对于时间段的参
    * 数会拆分, 而不是作为一个数组, 详情见规范: https://jiang-xuan.github.io/jfrontlife/前后端交互规范#请求规范
    */
-  timeRangeFields: Array<keyof T>;
+  timeRangeFields?: Array<keyof T>;
   /**
    * @description 请求列表数据的 dispatch 的 type
    */
@@ -58,13 +58,13 @@ export interface ISearchListWrappedComponentProps<T> {
   urlQueryParams: any;
 }
 
-export default function<T>(options?: ISearchListOptions<T>) {
+export default function<T>(options: ISearchListOptions<T>) {
   const { singleFields, singleFieldPrefix, timeRangeFields, listRequestType } = options;
   return WrappedComponent => {
     const wrappedComponentName =
       WrappedComponent.displayName || WrappedComponent.name || 'Component';
     // 实际组件
-    const component = class SearchListHOC extends Component<ISearchListProps> {
+    const component = class SearchListHOC extends React.Component<ISearchListProps> {
       public static displayName: string = `SearchList(${wrappedComponentName})`;
 
       private tablePagination: PaginationProps;
@@ -165,31 +165,35 @@ export default function<T>(options?: ISearchListOptions<T>) {
         /**
          * 单选的表单项的参数传递
          */
-        singleFields.forEach(singleField => {
-          if (params[singleField]) {
-            if (params[singleField].length > 0) {
-              const name = singleFieldPrefix
-                ? `${singleFieldPrefix}${singleField.slice(0, 1).toUpperCase()}${singleField.slice(
-                    1
-                  )}`
-                : singleField;
-              params[name] = params[singleField][0];
+        if (singleFields) {
+          singleFields.forEach(singleField => {
+            if (params[singleField]) {
+              if (params[singleField].length > 0) {
+                const name = singleFieldPrefix
+                  ? `${singleFieldPrefix}${singleField
+                      .slice(0, 1)
+                      .toUpperCase()}${singleField.slice(1)}`
+                  : singleField;
+                params[name] = params[singleField][0];
+              }
+              delete params[singleField];
             }
-            delete params[singleField];
-          }
-        });
+          });
+        }
 
         /**
          * 时间 range 参数传递
          */
-        timeRangeFields.forEach(timeRangeField => {
-          if (params[timeRangeField]) {
-            const [start, end] = params[timeRangeField];
-            params[`${timeRangeField}Start`] = start;
-            params[`${timeRangeField}End`] = end;
-            delete params[timeRangeField];
-          }
-        });
+        if (timeRangeFields) {
+          timeRangeFields.forEach(timeRangeField => {
+            if (params[timeRangeField]) {
+              const [start, end] = params[timeRangeField];
+              params[`${timeRangeField}Start`] = start;
+              params[`${timeRangeField}End`] = end;
+              delete params[timeRangeField];
+            }
+          });
+        }
 
         console.log(params);
 
