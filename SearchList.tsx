@@ -152,7 +152,7 @@ export default function<T>(options: ISearchListOptions<T>) {
         } else {
           params = {
             ...params,
-            current: 1,
+            p: 1,
             pageSize: TABLE_DEFAULT_PAGE_SIZE,
           };
         }
