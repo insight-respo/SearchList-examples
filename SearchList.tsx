@@ -55,7 +55,7 @@ export interface ISearchListWrappedComponentProps<T> {
     sorter: SorterResult<T>
   ): void;
   handleSearch(): void;
-  urlQueryParams: any;
+  urlQueryParams: Record<keyof T, string> & { current: string, pageSize: string };
 }
 
 export default function<T>(options: ISearchListOptions<T>) {
