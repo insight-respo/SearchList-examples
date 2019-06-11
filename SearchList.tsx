@@ -1,6 +1,8 @@
 /**
  * @fileoverview 搜索列表的高阶组件
  * @author 蒋璇 <jiangxuan@dxy.cn>
+ * @see https://github.com/insight-respo/SearchList-examples
+ * @description 修改该组件请 file issue 到上面的仓库中告知
  */
 
 // tslint:disable: member-ordering
@@ -44,6 +46,13 @@ export interface ISearchListProps extends FormComponentProps {
   location: Location;
 }
 
+interface IPaginationParams {
+  // 当前页码
+  p: string;
+  // 每页条数
+  pageSize: string;
+}
+
 /**
  * @description 用于给调用方进行 type 断言
  */
@@ -55,7 +64,7 @@ export interface ISearchListWrappedComponentProps<T> {
     sorter: SorterResult<T>
   ): void;
   handleSearch(): void;
-  urlQueryParams: Record<keyof T, string> & { current: string, pageSize: string };
+  urlQueryParams: Record<keyof T, string> & IPaginationParams;
 }
 
 export default function<T>(options: ISearchListOptions<T>) {
@@ -137,7 +146,7 @@ export default function<T>(options: ISearchListOptions<T>) {
         if (this.tablePagination) {
           params = {
             ...params,
-            current: this.tablePagination.current,
+            p: this.tablePagination.current,
             pageSize: this.tablePagination.pageSize,
           };
         } else {

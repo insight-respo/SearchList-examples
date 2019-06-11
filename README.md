@@ -4,6 +4,8 @@
 
 这是因为作者对于 typescript 的使用并没有那么熟练, 还在学习阶段, 会不断的优化该组件
 
+**Notes: 该组件强依赖 [列表接口格式规范][列表接口格式规范], 请先阅读该规范**
+
 ## How to work
 
 * Step 1
@@ -23,3 +25,5 @@ cd SearchList-examples & yarn
 ```bash
 yarn start
 ```
+
+[列表接口格式规范]: [https://jiang-xuan.github.io/jfrontlife/前后端交互规范#列表接口格式规范]
