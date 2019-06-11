@@ -26,4 +26,4 @@ cd SearchList-examples & yarn
 yarn start
 ```
 
-[列表接口格式规范]: [https://jiang-xuan.github.io/jfrontlife/前后端交互规范#列表接口格式规范]
+[列表接口格式规范]: https://jiang-xuan.github.io/jfrontlife/前后端交互规范#列表接口格式规范
