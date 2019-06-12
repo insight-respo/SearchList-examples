@@ -13,8 +13,7 @@ import { SorterResult } from 'antd/lib/table';
 import { Location } from 'history';
 import { isMoment } from 'moment';
 import * as React from 'react';
-import Router from 'umi/router';
-
+import Router, { RouteData } from 'umi/router';
 /**
  * @param T list 的一条数据的 结构
  */
@@ -39,11 +38,20 @@ export interface ISearchListOptions<T> {
    * @description 请求列表数据的 dispatch 的 type
    */
   listRequestType: string;
+
+  DO_NOT_USE_THIS_OPTIONS_ROUTER?: {
+    push: (path: string | RouteData) => void;
+    replace: (path: string | RouteData) => void;
+    go: (count: number) => void;
+    goBack: () => void;
+  };
 }
 
 export interface ISearchListProps extends FormComponentProps {
   dispatch: (options: { type: string; payload: object }) => void;
-  location: Location;
+  location: Location & {
+    query: object;
+  };
 }
 
 interface IPaginationParams {
@@ -68,7 +76,8 @@ export interface ISearchListWrappedComponentProps<T> {
 }
 
 export default function<T>(options: ISearchListOptions<T>) {
-  const { singleFields, singleFieldPrefix, timeRangeFields, listRequestType } = options;
+  const { singleFields, singleFieldPrefix, timeRangeFields, listRequestType, DO_NOT_USE_THIS_OPTIONS_ROUTER } = options;
+  const realRouter = DO_NOT_USE_THIS_OPTIONS_ROUTER || Router
   return WrappedComponent => {
     const wrappedComponentName =
       WrappedComponent.displayName || WrappedComponent.name || 'Component';
@@ -89,7 +98,7 @@ export default function<T>(options: ISearchListOptions<T>) {
           location: { query },
         } = this.props;
 
-        return query as object;
+        return query;
       };
 
       private urlQueryParams = this.initUrlQueryParams();
@@ -207,7 +216,7 @@ export default function<T>(options: ISearchListOptions<T>) {
         console.log(params);
 
         // 将所有的参数放置到 url 中
-        Router.replace({
+        realRouter.replace({
           pathname,
           query: {
             ...params,
