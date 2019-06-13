@@ -22,16 +22,19 @@ export interface ISearchListOptions<T> {
    * @description 单选项的字段, 场景
    * * 是否关联成分词, 是否关联靶点... antd 的 table 在单选的场景下依旧是数组, 目前 insight 接口规范中需要是
    * 一个值, 而不是数组, 详情见规范 https://jiang-xuan.github.io/jfrontlife/前后端交互规范#请求规范
+   * @default []
    */
   singleFields?: Array<keyof T>;
   /**
    * @description 在 是否关联成分词, 是否关联靶点 等的场景下, 一般不会直接已字段名进行请求, 而是会加上一个 `isAssoc` 的前缀
    * 该配置可以用来配置该前缀
+   * @default 'isAssoc'
    */
   singleFieldPrefix?: string;
   /**
    * @description 在筛选中中有时会存在 时间段 这样的筛选项, 目前 insight 接口规范中对于时间段的参
    * 数会拆分, 而不是作为一个数组, 详情见规范: https://jiang-xuan.github.io/jfrontlife/前后端交互规范#请求规范
+   * @default []
    */
   timeRangeFields?: Array<keyof T>;
   /**
