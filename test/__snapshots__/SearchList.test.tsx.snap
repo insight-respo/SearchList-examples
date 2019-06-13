@@ -3,9 +3,10 @@
 exports[`should be render without error 1`] = `
 <div>
   <div
+    className="searchButton"
     onClick={[Function]}
   >
-    搜索
+    form 表单搜索
   </div>
   <div
     onClick={[Function]}
