@@ -17,6 +17,18 @@ interface IExample1Props extends FormComponentProps, ISearchListWrappedComponent
   listData: IExample1StateListData
 }
 
+const assocFilters = [
+  {
+    text: '已关联',
+    value: '1',
+  },
+  {
+    text: '未关联',
+    value: '-1',
+  },
+];
+
+
 
 /**
  * @description 初始化 rangePicker 的初始值
@@ -37,38 +49,48 @@ const initialRangePickerValue = (start: number, end: number) => {
 }))
 @SearchList<IListItem>({
   listRequestType: 'example1/getListData',
+  singleFieldPrefix: 'isAssoc',
+  singleFields: ['stdName'],
   timeRangeFields: ['createTime'],
 })
 class Example1 extends React.Component<IExample1Props, {}> {
-  private columns: Array<ColumnProps<IListItem>> = [
-    {
-      title: 'id',
-      dataIndex: 'id',
-      sorter: true,
-    },
-    {
-      title: '城市名',
-      dataIndex: 'name',
-    },
-    {
-      title: 'zip',
-      dataIndex: 'zip',
-    },
-    {
-      title: '人口',
-      dataIndex: 'population',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-    }
-  ]
+  private getColumns = (): Array<ColumnProps<IListItem>> => {
+    return [
+      {
+        title: 'id',
+        dataIndex: 'id',
+        sorter: true,
+      },
+      {
+        title: '标准城市名',
+        dataIndex: 'stdName',
+        filters: assocFilters,
+        filterMultiple: false,
+        filteredValue: this.props.urlQueryParams.isAssocStdName
+          ? [this.props.urlQueryParams.isAssocStdName]
+          : [],
+      },
+      {
+        title: 'zip',
+        dataIndex: 'zip',
+      },
+      {
+        title: '人口',
+        dataIndex: 'population',
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'createTime',
+      }
+    ]
+  }
 
   public componentDidMount() {
     // 发起请求获取第一次数据
   }
 
   public render() {
+    const columns = this.getColumns();
     return (
       <div className={styles.normal}>
         <div>
@@ -78,10 +100,59 @@ class Example1 extends React.Component<IExample1Props, {}> {
             <li>处理 filter form search 请求</li>
             <li>处理表格的 filter 请求</li>
           </ul>
+          <h2>注意:</h2>
+          <ul>
+            <li>
+              <details>
+                <summary>
+                  如果想要 table 的 columns 和 url 中的 query 部分同步, 必须在 render 中重新渲染 columns
+                </summary>
+                <pre>
+                  {`
+private getColumns = (): Array<ColumnProps<IListItem>> => {
+    return [
+      {
+        title: 'id',
+        dataIndex: 'id',
+        sorter: true,
+      },
+      {
+        title: '标准城市名',
+        dataIndex: 'stdName',
+        filters: assocFilters,
+        filterMultiple: false,
+        filteredValue: this.props.urlQueryParams.isAssocStdName
+          ? [this.props.urlQueryParams.isAssocStdName]
+          : [],
+      },
+      {
+        title: 'zip',
+        dataIndex: 'zip',
+      },
+      {
+        title: '人口',
+        dataIndex: 'population',
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'createTime',
+      }
+    ]
+  }
+                `}
+                {`
+public render() {
+  const columns = this.getColumns();
+}
+                  `}
+                </pre>
+              </details>
+            </li>
+          </ul>
         </div>
 
         {this.renderFilterForm()}
-        <Table pagination={{...this.props.listData.paginaton}} onChange={this.props.handleTableChange} rowKey="id" columns={this.columns} dataSource={this.props.listData.list} />
+        <Table pagination={{...this.props.listData.paginaton}} onChange={this.props.handleTableChange} rowKey="id" columns={columns} dataSource={this.props.listData.list} />
       </div>
     );
   }

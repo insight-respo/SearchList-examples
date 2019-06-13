@@ -5,7 +5,7 @@ export interface IListItem {
   /** 数据的 id */
   id: string;
   /** 城市名 */
-  name: string;
+  stdName: string;
   /** 城市邮件编码 */
   zip: string;
   /** 人口(万人) */
@@ -16,13 +16,13 @@ export interface IListItem {
 
 const mockData: Array<IListItem> = [{
   id: '1',
-  name: '徐州',
+  stdName: '徐州',
   zip: '000001',
   population: 5000,
   createTime: 1560160103273,
 }, {
   id: '2',
-  name: '江西',
+  stdName: '江西',
   zip: '000002',
   population: 2000,
   createTime: 1560160800370,

@@ -77,9 +77,9 @@ export interface ISearchListWrappedComponentProps<T> {
 
 export default function<T>(options: ISearchListOptions<T>) {
   const {
-    singleFields,
-    singleFieldPrefix,
-    timeRangeFields,
+    singleFields = [],
+    singleFieldPrefix = 'isAssoc',
+    timeRangeFields = [],
     listRequestType,
     DO_NOT_USE_THIS_OPTIONS_ROUTER,
   } = options;
@@ -146,10 +146,12 @@ export default function<T>(options: ISearchListOptions<T>) {
         if (this.formValues) {
           const formatedFormValue = Object.entries(this.formValues).reduce((prev, curr) => {
             const [key, value] = curr;
-            // 如果数据是一个数组, 那么就说明该数据是一个时间 range 选择器
-            prev[key] = Array.isArray(value)
-              ? value.map(item => (isMoment(item) ? item.valueOf() : item))
-              : value;
+            // 如果该数据是一个时间 range 选择器
+            if (timeRangeFields.includes(key)) {
+              prev[key] = value.map(item => (isMoment(item) ? item.valueOf() : item));
+            } else {
+              prev[key] = value;
+            }
 
             return prev;
           }, {});
@@ -199,6 +201,13 @@ export default function<T>(options: ISearchListOptions<T>) {
                       .toUpperCase()}${singleField.slice(1)}`
                   : singleField;
                 params[name] = params[singleField][0];
+              } else {
+                // 用户没有选中任何的选项或者是用户点击了重置按钮
+                delete params[
+                  `${singleFieldPrefix}${singleField.slice(0, 1).toUpperCase()}${singleField.slice(
+                    1
+                  )}`
+                ];
               }
               delete params[singleField];
             }
