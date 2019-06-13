@@ -6,7 +6,8 @@
   "scripts": {
     "start": "umi dev",
     "test": "umi test",
-    "test:watch": "umi test --watch"
+    "test:watch": "umi test --watch",
+    "test:coverage": "umi test --coverage"
   },
   "repository": {
     "type": "git",
