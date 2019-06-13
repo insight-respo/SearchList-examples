@@ -11,5 +11,6 @@ module.exports = {
       }
     },
     '__UMI_HTML_SUFFIX': false
-  }
+  },
+  setupFilesAfterEnv: ['<rootDir>/test/testSetup.js']
 };

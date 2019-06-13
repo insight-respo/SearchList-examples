@@ -76,8 +76,14 @@ export interface ISearchListWrappedComponentProps<T> {
 }
 
 export default function<T>(options: ISearchListOptions<T>) {
-  const { singleFields, singleFieldPrefix, timeRangeFields, listRequestType, DO_NOT_USE_THIS_OPTIONS_ROUTER } = options;
-  const realRouter = DO_NOT_USE_THIS_OPTIONS_ROUTER || Router
+  const {
+    singleFields,
+    singleFieldPrefix,
+    timeRangeFields,
+    listRequestType,
+    DO_NOT_USE_THIS_OPTIONS_ROUTER,
+  } = options;
+  const realRouter = DO_NOT_USE_THIS_OPTIONS_ROUTER || Router;
   return WrappedComponent => {
     const wrappedComponentName =
       WrappedComponent.displayName || WrappedComponent.name || 'Component';
@@ -93,6 +99,8 @@ export default function<T>(options: ISearchListOptions<T>) {
 
       private formValues: object;
 
+      private urlQueryParams: object;
+
       private initUrlQueryParams = () => {
         const {
           location: { query },
@@ -100,8 +108,6 @@ export default function<T>(options: ISearchListOptions<T>) {
 
         return query;
       };
-
-      private urlQueryParams = this.initUrlQueryParams();
 
       private handleTableChange = (
         pagination: PaginationProps,
@@ -111,9 +117,7 @@ export default function<T>(options: ISearchListOptions<T>) {
         this.tablePagination = pagination;
         this.tableFilters = filters;
 
-        if (sorter.field) {
-          this.tableSorter = sorter;
-        }
+        this.tableSorter = sorter;
 
         this.handleSearch();
       };
@@ -173,11 +177,13 @@ export default function<T>(options: ISearchListOptions<T>) {
           };
         }
 
-        if (this.tableSorter) {
+        if (this.tableSorter && this.tableSorter.field) {
           params = {
             ...params,
             sorter: `${this.tableSorter.field},${this.tableSorter.order}`,
           };
+        } else {
+          delete params.sorter;
         }
 
         /**
@@ -213,8 +219,6 @@ export default function<T>(options: ISearchListOptions<T>) {
           });
         }
 
-        console.log(params);
-
         // 将所有的参数放置到 url 中
         realRouter.replace({
           pathname,
@@ -232,13 +236,15 @@ export default function<T>(options: ISearchListOptions<T>) {
       };
 
       public render() {
+        const urlQueryParams = this.initUrlQueryParams();
+        this.urlQueryParams = urlQueryParams;
         return (
           <WrappedComponent
             {...this.props}
             handleTableChange={this.handleTableChange}
             handleSubmit={this.handleSubmit}
             handleSearch={this.handleSearch}
-            urlQueryParams={this.urlQueryParams}
+            urlQueryParams={urlQueryParams}
           />
         );
       }
