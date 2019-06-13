@@ -94,11 +94,19 @@ class Example1 extends React.Component<IExample1Props, {}> {
     return (
       <div className={styles.normal}>
         <div>
-          <h2>本实例展现了该组件的能力</h2>
+          <h1>SearchList 高阶组件文档</h1>
+          <h2>本组件依赖</h2>
           <ul>
-            <li>同步 url 参数</li>
+            <li>需要成为 umi 的 router 的直接组件, 也就是该组件需要配置在 umi 的 router 中</li>
+            <li>依赖 dispatch, 需要在 dva 中的 connect 高阶组件之下</li>
+            <li>依赖 form, 需要在 antd 库的 form.create() 高阶组件之下</li>
+          </ul>
+          <h2>本例子展现了该组件的能力</h2>
+          <ul>
+            <li>浏览器地址栏 query 和 用户筛选 双向绑定. NOTE: 用户直接更改浏览器地址栏中的地址并不能触发请求, 请尽量不要这么操作, 因为无法触发组件 didMount, 目前还没有找到更好的办法来处理这个问题.</li>
             <li>处理 filter form search 请求</li>
             <li>处理表格的 filter 请求</li>
+            <li style={{ color: 'red' }}>严格遵循 <a target="_blank" href="https://jiang-xuan.github.io/jfrontlife/前后端交互规范">接口请求规范</a> </li>
           </ul>
           <h2>注意:</h2>
           <ul>
