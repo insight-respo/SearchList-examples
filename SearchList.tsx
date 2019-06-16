@@ -11,20 +11,25 @@ import { FormComponentProps } from 'antd/lib/form';
 import { PaginationProps } from 'antd/lib/pagination';
 import { SorterResult } from 'antd/lib/table';
 import { Location } from 'history';
-import { isMoment } from 'moment';
+import { isMoment, Moment } from 'moment';
 import * as React from 'react';
 import Router, { RouteData } from 'umi/router';
+
+interface IT {
+  [x: string]: any;
+}
+
 /**
  * @param T list 的一条数据的 结构
  */
-export interface ISearchListOptions<T> {
+export interface ISearchListOptions<T extends IT> {
   /**
    * @description 单选项的字段, 场景
    * * 是否关联成分词, 是否关联靶点... antd 的 table 在单选的场景下依旧是数组, 目前 insight 接口规范中需要是
    * 一个值, 而不是数组, 详情见规范 https://jiang-xuan.github.io/jfrontlife/前后端交互规范#请求规范
    * @default []
    */
-  singleFields?: Array<keyof T>;
+  singleFields?: Array<Extract<keyof T, string>>;
   /**
    * @description 在 是否关联成分词, 是否关联靶点 等的场景下, 一般不会直接已字段名进行请求, 而是会加上一个 `isAssoc` 的前缀
    * 该配置可以用来配置该前缀
@@ -36,7 +41,7 @@ export interface ISearchListOptions<T> {
    * 数会拆分, 而不是作为一个数组, 详情见规范: https://jiang-xuan.github.io/jfrontlife/前后端交互规范#请求规范
    * @default []
    */
-  timeRangeFields?: Array<keyof T>;
+  timeRangeFields?: Array<Extract<keyof T, string>>;
   /**
    * @description 请求列表数据的 dispatch 的 type
    */
@@ -64,10 +69,14 @@ interface IPaginationParams {
   pageSize: string;
 }
 
+type TFormValues = {
+  [x: string]: any;
+};
+
 /**
  * @description 用于给调用方进行 type 断言
  */
-export interface ISearchListWrappedComponentProps<T> {
+export interface ISearchListWrappedComponentProps<T extends IT> {
   handleSubmit(event: React.SyntheticEvent): void;
   handleTableChange(
     pagination: PaginationProps,
@@ -78,7 +87,7 @@ export interface ISearchListWrappedComponentProps<T> {
   urlQueryParams: Record<keyof T, string> & IPaginationParams;
 }
 
-export default function<T>(options: ISearchListOptions<T>) {
+export default function<T extends IT>(options: ISearchListOptions<T>) {
   const {
     singleFields = [],
     singleFieldPrefix = 'isAssoc',
@@ -100,9 +109,9 @@ export default function<T>(options: ISearchListOptions<T>) {
 
       private tableSorter: SorterResult<T>;
 
-      private formValues: object;
+      private formValues: TFormValues;
 
-      private urlQueryParams: object;
+      private urlQueryParams: { [x: string]: any };
 
       private initUrlQueryParams = () => {
         const {
@@ -128,7 +137,7 @@ export default function<T>(options: ISearchListOptions<T>) {
       private handleSubmit = (event: React.SyntheticEvent) => {
         event.preventDefault();
 
-        this.props.form.validateFields((errors, values) => {
+        this.props.form.validateFields((errors, values: TFormValues) => {
           if (errors) {
             return;
           }
@@ -151,7 +160,7 @@ export default function<T>(options: ISearchListOptions<T>) {
             const [key, value] = curr;
             // 如果该数据是一个时间 range 选择器
             if (timeRangeFields.includes(key)) {
-              prev[key] = value.map(item => (isMoment(item) ? item.valueOf() : item));
+              prev[key] = (value as Array<Moment>).map(item => item.valueOf());
             } else {
               prev[key] = value;
             }
