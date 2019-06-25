@@ -279,8 +279,8 @@ describe('should: 在点击搜索按钮的时候调用正确的函数和传入�
         p: 1,
         pageSize: 15,
         id: '123456',
-        updateTimeStart: 1560407706310,
-        updateTimeEnd: 1560407857997,
+        updateTimeStart: 1560407706,
+        updateTimeEnd: 1560407857,
       }
     })
     expect(dispatch).toBeCalledWith({
@@ -289,8 +289,8 @@ describe('should: 在点击搜索按钮的时候调用正确的函数和传入�
         p: 1,
         pageSize: 15,
         id: '123456',
-        updateTimeStart: 1560407706310,
-        updateTimeEnd: 1560407857997,
+        updateTimeStart: 1560407706,
+        updateTimeEnd: 1560407857,
       }
     })
   })

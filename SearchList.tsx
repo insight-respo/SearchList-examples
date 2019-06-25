@@ -160,7 +160,7 @@ export default function<T extends IT>(options: ISearchListOptions<T>) {
             const [key, value] = curr;
             // 如果该数据是一个时间 range 选择器
             if (timeRangeFields.includes(key)) {
-              prev[key] = (value as Array<Moment>).map(item => item.valueOf());
+              prev[key] = (value as Moment[]).map(item => item.unix());
             } else {
               prev[key] = value;
             }
