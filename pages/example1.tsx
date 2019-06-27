@@ -101,6 +101,50 @@ class Example1 extends React.Component<IExample1Props, {}> {
             <li>依赖 dispatch, 需要在 dva 中的 connect 高阶组件之下</li>
             <li>依赖 form, 需要在 antd 库的 form.create() 高阶组件之下</li>
           </ul>
+          <h2>本组件接受的 Props</h2>
+          <ul>
+            <table>
+              <thead>
+                <tr>
+                  <th>prop 名</th>
+                  <th>数据类型</th>
+                  <th>是否必填</th>
+                  <th>默认值</th>
+                  <th>解释</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>singleFields</td>
+                  <td>string[]</td>
+                  <td>否</td>
+                  <td>[]</td>
+                  <td>antd 表格中的单选项字段</td>
+                </tr>
+                <tr>
+                  <td>singleFieldPrefix</td>
+                  <td>string</td>
+                  <td>否</td>
+                  <td>isAssoc</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>timeRangeFields</td>
+                  <td>string[]</td>
+                  <td>否</td>
+                  <td>[]</td>
+                  <td>form 表单中的 timeRange 选择器</td>
+                </tr>
+                <tr>
+                  <td>listRequestType</td>
+                  <td>string</td>
+                  <td>是</td>
+                  <td>-</td>
+                  <td>获取数据的请求的 type</td>
+                </tr>
+              </tbody>
+            </table>
+          </ul>
           <h2>本例子展现了该组件的能力</h2>
           <ul>
             <li>浏览器地址栏 query 和 用户筛选 双向绑定. NOTE: 用户直接更改浏览器地址栏中的地址并不能触发请求, 请尽量不要这么操作, 因为无法触发组件 didMount, 目前还没有找到更好的办法来处理这个问题.</li>

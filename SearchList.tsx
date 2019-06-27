@@ -80,7 +80,7 @@ export interface ISearchListWrappedComponentProps<T extends IT> {
   handleSubmit(event: React.SyntheticEvent): void;
   handleTableChange(
     pagination: PaginationProps,
-    filters: Record<keyof T, string[]>,
+    filters: Record<keyof T, string[] | string>,
     sorter: SorterResult<T>
   ): void;
   handleSearch(): void;
@@ -127,8 +127,32 @@ export default function<T extends IT>(options: ISearchListOptions<T>) {
         sorter: SorterResult<T>
       ) => {
         this.tablePagination = pagination;
-        this.tableFilters = filters;
 
+        /**
+         * 单选的表单项的参数传递
+         */
+        const handledFilters = {};
+        if (singleFields.length) {
+          singleFields.forEach(singleField => {
+            if (filters[singleField] && filters[singleField].length) {
+              const name = singleFieldPrefix
+                ? `${singleFieldPrefix}${singleField.slice(0, 1).toUpperCase()}${singleField.slice(
+                    1
+                  )}`
+                : singleField;
+              handledFilters[name] = filters[singleField][0];
+            } else {
+              // 用户没有选中任何的选项或者是用户点击了重置按钮
+              delete this.urlQueryParams[
+                `${singleFieldPrefix}${singleField.slice(0, 1).toUpperCase()}${singleField.slice(
+                  1
+                )}`
+              ];
+            }
+          });
+        }
+
+        this.tableFilters = handledFilters;
         this.tableSorter = sorter;
 
         this.handleSearch();
@@ -198,32 +222,6 @@ export default function<T extends IT>(options: ISearchListOptions<T>) {
           };
         } else {
           delete params.sorter;
-        }
-
-        /**
-         * 单选的表单项的参数传递
-         */
-        if (singleFields) {
-          singleFields.forEach(singleField => {
-            if (params[singleField]) {
-              if (params[singleField].length > 0) {
-                const name = singleFieldPrefix
-                  ? `${singleFieldPrefix}${singleField
-                      .slice(0, 1)
-                      .toUpperCase()}${singleField.slice(1)}`
-                  : singleField;
-                params[name] = params[singleField][0];
-              } else {
-                // 用户没有选中任何的选项或者是用户点击了重置按钮
-                delete params[
-                  `${singleFieldPrefix}${singleField.slice(0, 1).toUpperCase()}${singleField.slice(
-                    1
-                  )}`
-                ];
-              }
-              delete params[singleField];
-            }
-          });
         }
 
         /**

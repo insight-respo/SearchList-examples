@@ -377,3 +377,83 @@ describe('should: 在表格变化的时候调用合适的函数和传递响应�
     })
   })
 })
+
+it('filter form 中存在和 table 中的 singleFields 相同字段名, 请求的传递参数应该区分', () => {
+  const OriginComponent = props => (
+    <React.Fragment>
+      <div
+        onClick={props.handleSubmit}
+        className="submit"
+      >
+        submit 按钮
+      </div>
+      <div
+        onClick={() => {
+          props.handleTableChange({
+            current: 1,
+            pageSize: 15
+          }, {
+            // table 选择 stdElement 单选框
+            stdElement: ['1'],
+          })
+        }}
+        className="selectSingleField"
+      >表格中的单选筛选项</div>
+    </React.Fragment>
+  )
+  const dispatch = jest.fn(() => {});
+  const routerReplace = jest.fn(() => {});
+  const validateFields = jest.fn(callback => {
+    callback(null, {
+      // form 中存在 stdElement 字段
+      stdElement: 'foo',
+    })
+  })
+  const location = {
+    pathname: '/',
+    search: '',
+    state: '',
+    hash: '',
+    query: {},
+  }
+  const Router = {
+    replace: routerReplace,
+    push: () => {},
+    go: () => {},
+    goBack: () => {},
+  }
+  const compose = _.flowRight(
+    connect(dispatch, location, {
+      form: {
+        validateFields
+      }
+    }),
+    SearchList({
+      listRequestType: 'testDispatch/getList',
+      singleFieldPrefix: 'isAssoc',
+      singleFields: ['stdElement'],
+      DO_NOT_USE_THIS_OPTIONS_ROUTER: Router,
+    })
+  )
+
+  const Component = compose(OriginComponent)
+
+  const testRenderer = enzyme.mount(<Component />);
+
+  const submitBtn = testRenderer.find('.submit')
+  submitBtn.simulate('click');
+
+  const selectSingleFieldBtn = testRenderer.find('.selectSingleField')
+
+  selectSingleFieldBtn.simulate('click');
+
+  expect(dispatch).toBeCalledWith({
+    type: 'testDispatch/getList',
+    payload: {
+      p: 1,
+      pageSize: 15,
+      stdElement: 'foo',
+      isAssocStdElement: '1',
+    },
+  })
+})
